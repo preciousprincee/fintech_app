@@ -1,0 +1,86 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bank App Dashboard</title>
+    <!-- Include Tailwind CSS -->
+    <link rel="stylesheet" href="{% static 'tailwind.min.css' %}">
+</head>
+<body class="bg-gray-100 font-sans">
+    <header class="bg-blue-500 text-white p-4">
+        <div class="container mx-auto">
+            <h1 class="text-2xl font-semibold">Bank App Dashboard</h1>
+        </div>
+    </header>
+
+    <div class="container mx-auto mt-8 p-4">
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+            <!-- Card 1: Account Balance -->
+            <div class="bg-white rounded-lg p-4 shadow-md">
+                <h2 class="text-lg font-semibold">Account Balance</h2>
+                <p class="text-3xl mt-2">{{deposit_amt}}</p>
+            </div>
+
+            <!-- Card 2: Recent Transactions -->
+            <div class="bg-white rounded-lg p-4 shadow-md">
+                <h2 class="text-lg font-semibold">Recent Transactions</h2>
+                <ul class="mt-2">
+                    {% for transaction in transaction_history reversed %}
+                    {% if forloop.counter <= 10 %}
+                        <li class="mb-2">
+                            {% if transaction.deposit > 0 %}
+                                Deposit of ${{ transaction.deposit }}
+                            {% endif %}
+                            {% if transaction.transfer > 0 %}
+                                Transfer of ${{ transaction.transfer }}
+                            {% endif %}
+                            - New Balance: ${{ transaction.new_balance }}
+                        </li>
+                    {% endif %}
+                {% endfor %}
+                </ul>
+            </div>
+            
+
+            <!-- Card 3: Transfer Money -->
+            <div class="bg-white rounded-lg p-4 shadow-md">
+                <h2 class="text-lg font-semibold">Transfer Money</h2>
+                <form action="" method="post" class="mt-2">
+                    {% csrf_token %}
+                    <div class="mb-4">
+                        <label for="recipient" class="block text-sm font-medium">Recipient</label>
+                        <input type="text" id="recipient" class="w-full border rounded-md p-2">
+                    </div>
+                    <div class="mb-4">
+                        <label for="amount" class="block text-sm font-medium">Amount</label>
+                        <input name="transfer" type="number" id="amount" class="w-full border rounded-md p-2">
+                    </div>
+                    <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600">Transfer</button>
+                </form>
+            </div>
+
+            <div class="bg-white rounded-lg p-4 shadow-md">
+                <h2 class="text-lg font-semibold">Deposit Money</h2>
+                <form action="" method="post" class="mt-2">
+                   {% csrf_token %}
+                    <div class="mb-4">
+                        <label for="amount" class="block text-sm font-medium">Amount</label>
+                        <input name="deposit" type="number" id="amount" class="w-full border rounded-md p-2">
+                    </div>
+                    <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600">Deposit</button>
+                </form>
+            </div>
+
+            <!-- Card 4: Account Details -->
+            <div class="bg-white rounded-lg p-4 shadow-md">
+                <h2 class="text-lg font-semibold">Account Details</h2>
+                <p class="mt-2">Account Number: 1234567890</p>
+                <p class="mt-2">Account Type: Savings</p>
+                <p class="mt-2">Account Holder: John Doe</p>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
